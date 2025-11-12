@@ -1,0 +1,29 @@
+# This `requirements.txt` lists the main runtime/dev dependencies and installation commands
+# NOTE: This is a JS/Node project; use `npm` or `yarn` to install packages listed here.
+# NOTE: Please see package.json for exact versions.
+
+# Node / NPM
+node>=18
+npm>=9
+
+# Core runtime
+next >= 14.0.0
+react >= 18.0.0
+react-dom >= 18.0.0
+
+# Dev and tooling
+eslint
+prettier
+
+# Optional styling
+tailwindcss
+postcss
+autoprefixer
+
+# Useful commands to install dependencies (example):
+# npm init -y
+# npm install next react react-dom
+# npm install -D eslint prettier
+# npm install -D tailwindcss postcss autoprefixer
+
+# When migrating to NextJS, also create a package.json and run the relevant init steps.
