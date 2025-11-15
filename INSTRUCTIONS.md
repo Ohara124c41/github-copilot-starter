@@ -1,8 +1,9 @@
-# Copilot Instruction File
+# Copilot Instruction File (Legacy Pointer)
+
+> **Note:** The canonical Copilot configuration now lives at `.github/copilot-instructions.md` per the rubric requirement.  
+> Keep that file up to date for Copilot-aware IDEs. The content below mirrors the expectations for quick reference inside the repo root.
 
 This file provides instructions and context for GitHub Copilot and any developer working on this Sudoku project.
-
-Please keep this file at the project root so Copilot can reference it when making suggestions.
 
 Primary goals and style
 - Use ES6+ JavaScript (let, const, arrow functions, classes where appropriate, async/await).

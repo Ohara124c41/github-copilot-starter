@@ -1,50 +1,127 @@
 :root {
-  --primary: #009999; /* base teal */
-  --primary-dark: #007f7f;
-  --accent: #ffcc99; /* complementary warm tone */
-  --udacity-blue: #02B3E4;
-  --cell-bg: #fafafa;
-  --cell-border: #bbb;
+  --page-bg: #f5fbfa;
+  --page-surface: #ffffff;
+  --page-surface-alt: #ecf7f6;
+  --page-text: #0c2626;
+  --page-muted: #4a6363;
+  --page-border: #cce7e4;
+  --accent: #0f8a83;
+  --accent-strong: #0b6a65;
+  --warning: #d83b3b;
+  --success: #1c9b84;
+  --shadow-color: rgba(12, 38, 38, 0.14);
+  --cell-bg: #ffffff;
+  --cell-alt: #e4f9f6;
+  --cell-alt-strong: #c8f1ea;
+  --cell-box-even: #fafdff;
+  --cell-box-odd: #9ae5dd;
+  --cell-box-odd-text: #083c3a;
+  --cell-border: #82cfc7;
+  --cell-prefilled: #d3edf0;
+  --cell-hint: #ffe3a3;
+  --cell-selected: #c7f0ff;
+  --match-highlight: #33444c;
+  --match-highlight-text: #e7f8f6;
+  --cell-conflict: #ffd7d7;
+  --cell-incorrect: #ffecec;
+  --box-divider: #0f8a83;
 }
 
-html, body {
+[data-theme='dark'] {
+  --page-bg: #020c0e;
+  --page-surface: #05181b;
+  --page-surface-alt: #072326;
+  --page-text: #e7f8f6;
+  --page-muted: #90b9b4;
+  --page-border: #0c3639;
+  --accent: #30d2c3;
+  --accent-strong: #16afa0;
+  --warning: #ff7a7a;
+  --success: #41f0c7;
+  --shadow-color: rgba(4, 16, 19, 0.65);
+  --cell-bg: #041517;
+  --cell-alt: #082628;
+  --cell-alt-strong: #0d3c40;
+  --cell-box-even: #04191b;
+  --cell-box-odd: #0c6d67;
+  --cell-box-odd-text: #e6fffa;
+  --cell-border: #0f4d4f;
+  --cell-prefilled: #0f2a2d;
+  --cell-hint: #c9912e;
+  --cell-selected: #0aa0b8;
+  --match-highlight: #33444c;
+  --match-highlight-text: #e7f8f6;
+  --cell-conflict: #753131;
+  --cell-incorrect: #5a1b1b;
+  --box-divider: #30d2c3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
   padding: 0;
   margin: 0;
-  font-family: Arial, sans-serif;
 }
 
-h1 { color: var(--udacity-blue); margin-top: 20px; text-align: center; }
+body {
+  min-height: 100vh;
+  background: var(--page-bg);
+  color: var(--page-text);
+  font-family: var(--font-sans, 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif);
+  line-height: 1.6;
+  transition: background 0.35s ease, color 0.35s ease;
+}
 
-main { padding: 20px; }
+main {
+  width: 100%;
+  min-height: 100vh;
+  padding: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 4vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-#sudoku-board { display: inline-block; margin: 20px auto; border: 4px solid #333; background: #fff; }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
 
-.sudoku-row { display: flex; }
+button,
+input,
+select {
+  font: inherit;
+}
 
-.sudoku-cell { width: 40px; height: 40px; border: 1px solid var(--cell-border); text-align: center; font-size: 20px; outline: none; background: var(--cell-bg); transition: background 0.2s; box-sizing: border-box; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-/* draw heavy borders between each 3x3 section */
-#sudoku-board .sudoku-row:nth-of-type(3n):not(:last-of-type) .sudoku-cell { border-bottom: 3px solid #111; }
-#sudoku-board .sudoku-row .sudoku-cell:nth-of-type(3n):not(:last-of-type) { border-right: 3px solid #111; }
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
 
-.sudoku-cell.box-base { background-color: #ffffff; }
-.sudoku-cell.box-alt { background-color: rgba(0,153,153,0.06); }
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
 
-.sudoku-cell.prefilled { background: #e0e0e0; font-weight: bold; color: #333; }
-.sudoku-cell.hint { background-color: var(--accent) !important; }
-.sudoku-cell.invalid { box-shadow: inset 0 0 0 2px rgba(255,0,0,0.15); }
-.sudoku-cell.conflict { box-shadow: inset 0 0 0 2px rgba(255,140,0,0.12); }
-
-.controls { margin: 12px auto; text-align: center; }
-
-button { padding: 8px 18px; margin: 0 8px; font-size: 16px; border: none; background: var(--primary); color: #fff; border-radius: 4px; cursor: pointer; }
-
-.udacity-blue { color: var(--udacity-blue); }
-
-table { margin: 12px auto; border-collapse: collapse; }
-th, td { padding: 6px 8px; }
-
-/* Selection and highlights */
-.sudoku-cell.selected { outline: 2px solid var(--primary-dark); }
-.sudoku-cell.same-number { background: rgba(2,179,228,0.08); }
-.sudoku-cell.highlight { background: rgba(0,153,153,0.08); }
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

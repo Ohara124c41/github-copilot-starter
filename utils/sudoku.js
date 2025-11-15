@@ -108,15 +108,120 @@ export default class SudokuGame {
     }
   }
 
+  isBoardSolved(board) {
+    for (let r = 0; r < this.SIZE; r++) for (let c = 0; c < this.SIZE; c++) if (board[r][c] === this.EMPTY) return false
+    return true
+  }
+
+  getCandidates(board, row, col) {
+    if (board[row][col] !== this.EMPTY) return []
+    const used = new Set()
+    for (let i = 0; i < this.SIZE; i++) {
+      if (board[row][i] !== this.EMPTY) used.add(board[row][i])
+      if (board[i][col] !== this.EMPTY) used.add(board[i][col])
+    }
+    const sr = row - (row % 3)
+    const sc = col - (col % 3)
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) {
+      const value = board[sr + r][sc + c]
+      if (value !== this.EMPTY) used.add(value)
+    }
+    const candidates = []
+    for (let value = 1; value <= this.SIZE; value++) {
+      if (!used.has(value)) candidates.push(value)
+    }
+    return candidates
+  }
+
+  applyNakedSingles(board) {
+    let progress = false
+    for (let r = 0; r < this.SIZE; r++) {
+      for (let c = 0; c < this.SIZE; c++) {
+        if (board[r][c] !== this.EMPTY) continue
+        const candidates = this.getCandidates(board, r, c)
+        if (candidates.length === 1) {
+          board[r][c] = candidates[0]
+          progress = true
+        }
+      }
+    }
+    return progress
+  }
+
+  applyHiddenSingles(board) {
+    let progress = false
+    const evaluateUnit = (cells) => {
+      const placements = new Map()
+      cells.forEach(([r, c]) => {
+        if (board[r][c] !== this.EMPTY) return
+        const candidates = this.getCandidates(board, r, c)
+        candidates.forEach((value) => {
+          if (!placements.has(value)) placements.set(value, [])
+          placements.get(value).push([r, c])
+        })
+      })
+      placements.forEach((spots, value) => {
+        if (spots.length === 1) {
+          const [r, c] = spots[0]
+          board[r][c] = value
+          progress = true
+        }
+      })
+    }
+    for (let r = 0; r < this.SIZE; r++) {
+      const rowCells = []
+      for (let c = 0; c < this.SIZE; c++) rowCells.push([r, c])
+      evaluateUnit(rowCells)
+    }
+    for (let c = 0; c < this.SIZE; c++) {
+      const colCells = []
+      for (let r = 0; r < this.SIZE; r++) colCells.push([r, c])
+      evaluateUnit(colCells)
+    }
+    for (let boxRow = 0; boxRow < this.SIZE; boxRow += 3) {
+      for (let boxCol = 0; boxCol < this.SIZE; boxCol += 3) {
+        const boxCells = []
+        for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) boxCells.push([boxRow + r, boxCol + c])
+        evaluateUnit(boxCells)
+      }
+    }
+    return progress
+  }
+
+  logicSolve(board) {
+    let iterations = 0
+    let madeProgress = false
+    do {
+      iterations++
+      const naked = this.applyNakedSingles(board)
+      const hidden = this.applyHiddenSingles(board)
+      madeProgress = naked || hidden
+    } while (madeProgress && iterations < 200)
+    return this.isBoardSolved(board)
+  }
+
   generatePuzzle(clues = 35) {
-    const b = this.createEmptyBoard()
-    this.fillBoard(b)
-    const solution = this.deepCopy(b)
-    this.removeCells(b, clues)
-    // set prefilled set
-    this.prefilled = new Set()
-    for (let r = 0; r < this.SIZE; r++) for (let c = 0; c < this.SIZE; c++) if (b[r][c] !== this.EMPTY) this.prefilled.add(`${r},${c}`)
-    return { board: this.deepCopy(b), solution }
+    const maxAttempts = 80
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      const filled = this.createEmptyBoard()
+      this.fillBoard(filled)
+      const solution = this.deepCopy(filled)
+      this.removeCells(filled, clues)
+      const puzzle = this.deepCopy(filled)
+      const logicBoard = this.deepCopy(puzzle)
+      if (this.logicSolve(logicBoard) && this.checkAgainstSolution(logicBoard, solution)) {
+        this.prefilled = new Set()
+        this.hinted = new Set()
+        this.hintsUsed = 0
+        for (let r = 0; r < this.SIZE; r++) {
+          for (let c = 0; c < this.SIZE; c++) {
+            if (puzzle[r][c] !== this.EMPTY) this.prefilled.add(`${r},${c}`)
+          }
+        }
+        return { board: puzzle, solution }
+      }
+    }
+    throw new Error('Unable to generate a logic-solvable puzzle within the attempt limit.')
   }
 
   isPrefilled(r, c) {

@@ -1,31 +1,53 @@
 'use client'
 
-export default function Top10({ entries = [] }) {
+import styles from './Top10.module.css'
+
+const join = (...classes) => classes.filter(Boolean).join(' ')
+
+const formatTime = (seconds) => {
+  if (typeof seconds !== 'number' || Number.isNaN(seconds)) return '--'
+  const mins = Math.floor(seconds / 60)
+  const secs = seconds % 60
+  if (mins === 0) return `${secs}s`
+  return `${mins}m ${secs.toString().padStart(2, '0')}s`
+}
+
+export default function Top10({ entries = [], className = '' }) {
+  const containerClass = join(styles.container, className)
+  const hasEntries = entries.length > 0
+
   return (
-    <div style={{ marginTop: 16 }}>
-      <h3 className="udacity-blue">Top 10</h3>
-      <table style={{ margin: '0 auto', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Time (s)</th>
-            <th>Difficulty</th>
-            <th>Hints</th>
-          </tr>
-        </thead>
-        <tbody>
-          {entries.map((e, i) => (
-            <tr key={i} style={{ background: i % 2 === 0 ? '#fff' : 'rgba(0,0,0,0.04)' }}>
-              <td style={{ padding: 6 }}>{i + 1}</td>
-              <td style={{ padding: 6 }}>{e.name}</td>
-              <td style={{ padding: 6 }}>{e.time}</td>
-              <td style={{ padding: 6 }}>{e.difficulty}</td>
-              <td style={{ padding: 6 }}>{e.hints}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <section className={containerClass} aria-label="Top 10 fastest Sudoku times">
+      <h3 className={styles.title}>Leaderboard</h3>
+      {hasEntries ? (
+        <div className={styles.tableWrap}>
+          <table className={styles.table}>
+            <caption className={styles.caption}>Fastest completion times stored locally on this device.</caption>
+            <thead>
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">Player</th>
+                <th scope="col">Time</th>
+                <th scope="col">Level</th>
+                <th scope="col">Hints</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entries.map((entry, index) => (
+                <tr key={`${entry.name}-${entry.time}-${index}`}>
+                  <td><span className={styles.badge}>{index + 1}</span></td>
+                  <td>{entry.name}</td>
+                  <td>{formatTime(entry.time)}</td>
+                  <td>{entry.difficulty}</td>
+                  <td>{entry.hints}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className={styles.emptyState}>No recorded times yet. Beat the clock to claim your spot!</p>
+      )}
+    </section>
   )
 }

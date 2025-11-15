@@ -1,12 +1,11 @@
 import dynamic from 'next/dynamic'
+import styles from './page.module.css'
 
-// Game is a client component; we dynamically import it with SSR disabled
 const Game = dynamic(() => import('../components/Game'), { ssr: false })
 
 export default function Page() {
   return (
-    <main>
-      <h1 className="udacity-blue">Sudoku</h1>
+    <main className={styles.page}>
       <Game />
     </main>
   )
