@@ -218,6 +218,11 @@
   color: var(--page-text);
 }
 
+.filled {
+  background: var(--cell-filled);
+  color: #f5f0ff;
+}
+
 .hint {
   background: var(--cell-hint);
 }
@@ -298,5 +303,11 @@
   text-align: center;
   padding: 2rem;
   color: var(--page-muted);
+}
+
+/* Dark-mode neutral background for completed (user-filled) cells so the 3x3 alternation remains visible */
+:global([data-theme='dark']) .cell.completed {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--page-text);
 }
 

@@ -1,32 +1,26 @@
-# Copilot Instructions
+# Copilot Instructions (Best-Practice Guidance)
 
-<!-- Copilot reads this file from the default `.github/copilot-instructions.md` path. -->
+This file provides concise, actionable coding and style guidance for GitHub Copilot so generated suggestions match project standards. Keep entries short and prescriptive — avoid product-level prompts or step-by-step user instructions.
 
-## Style + Technology
-- Build with Next.js App Router and functional React components. Keep logic in reusable hooks or utilities when possible.
-- Use modern JavaScript (ES2020+). Prefer `const`/`let`, arrow functions, optional chaining, template literals, and modules.
-- Add concise comments for non-obvious logic, especially around Sudoku generation/validation and leaderboard persistence.
-- Favor modular CSS (CSS modules) and CSS variables for theming. Respect accessible color contrast.
-- Handle potential errors (board generation, localStorage access, timers) with `try/catch` and show helpful user messages.
+Principles
+- Be idiomatic: prefer modern JS (ES2020+), `const`/`let`, arrow functions, modules, and clear naming.
+- Keep logic testable and side-effect free where practical. Extract pure utilities from UI components.
+- Prefer small, focused functions and reusable hooks for shared behavior.
 
-## Gameplay + UX Rules
-- Provide Easy/Medium/Hard boards with unique, logic-solvable solutions. Valid puzzles should never require guessing.
-- Enforce inputs of digits 1-9, disable prefilled/hinted cells, and highlight conflicts immediately (row/column/box + conflicting cells).
-- Allow hints (fills a single cell, marks it, and disables editing) and a Check button that highlights incorrect entries.
-- After every valid input, detect solved boards automatically and congratulate the user (also trigger leaderboard flow).
-- Include a timer tied to puzzle start/end. Record time, difficulty, and hints in a local Top 10 table.
+Coding Standards
+- Use `async/await` for async flows. Handle failures with `try/catch` and return meaningful errors.
+- Validate inputs at boundaries; sanitize user-supplied data before use.
+- Favor composition over inheritance. Use small components and lift state sensibly.
 
-## Accessibility + UI
-- Add a light/dark mode toggle backed by CSS custom properties.
-- Sudoku grid must be responsive, keep alternating 3x3 colors, and avoid layout shift (use outlines/box-shadows instead of changing border widths on focus).
-- Use semantic roles (`grid`, `gridcell`, etc.), aria labels, and aria-live regions for status text.
-- Zebra stripe the leaderboard table, keep it keyboard accessible, and provide empty-state messaging.
+Styling & Theming
+- Use CSS Modules or scoped styles for component styles. Centralize global tokens in `styles/globals.css` (colors, spacing, radii).
+- Support `prefers-color-scheme` and a theme toggle that sets `document.documentElement.dataset.theme`.
+- Prefer high-contrast, accessible color combinations and avoid changing layout on focus.
 
-## Files of Interest
-- `app/page.jsx` ? landing page that renders the Sudoku experience.
-- `components/Game.jsx` ? overall Sudoku experience (controls, grid, hint/check logic).
-- `components/Top10.jsx` ? leaderboard UI. Reads data from `utils/leaderboard.js`.
-- `utils/sudoku.js` ? puzzle generation, validation, hints, timer.
-- `utils/leaderboard.js` ? handles persistence in `localStorage`.
+Accessibility
+- Use semantic roles (`grid`, `gridcell`), `aria-*` attributes for dynamic regions, and `aria-live` for status messages.
+- Ensure keyboard navigation for interactive elements and trap focus within modals.
 
-If you change the location of this instructions file in VS Code, call it out with a comment explaining the new path.
+Testing & Quality
+- Add unit tests for core logic (e.g., `utils/sudoku.js`) and integration tests for key flows.
+- Include linting and a pre-commit check (ESLint + Prettier) and keep commit messages clear and scoped.

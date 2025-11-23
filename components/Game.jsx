@@ -368,6 +368,7 @@ export default function Game() {
                           sameNumber ? styles.sameNumber : '',
                           isConflict ? styles.conflict : '',
                           isIncorrect ? styles.incorrect : '',
+                          (!isPrefilled && !isHinted && cell !== 0) ? styles.filled : '',
                           !isBoxEven ? styles.boxOddHighlight : ''
                         )
                         return (
@@ -416,6 +417,7 @@ export default function Game() {
     </div>
   )
 }
+
 
 
 

@@ -17,7 +17,8 @@
   --cell-box-odd: #9ae5dd;
   --cell-box-odd-text: #083c3a;
   --cell-border: #82cfc7;
-  --cell-prefilled: #d3edf0;
+  --cell-prefilled: #dce9ff;
+  --cell-filled: #ffffff;
   --cell-hint: #ffe3a3;
   --cell-selected: #c7f0ff;
   --match-highlight: #33444c;
@@ -46,7 +47,8 @@
   --cell-box-odd: #0c6d67;
   --cell-box-odd-text: #e6fffa;
   --cell-border: #0f4d4f;
-  --cell-prefilled: #0f2a2d;
+  --cell-prefilled: #4f3c75;
+  --cell-filled: #4f3c75;
   --cell-hint: #c9912e;
   --cell-selected: #0aa0b8;
   --match-highlight: #33444c;
